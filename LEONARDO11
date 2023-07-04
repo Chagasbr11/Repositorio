@@ -1,0 +1,60 @@
+(QUESTAO - 1)
+vendas_db=> CREATE TABLE AVALIACAO (
+vendas_db(> CPF NUMERIC NOT NULL,
+vendas_db(> CODIGO INTEGER NOT NULL,
+vendas_db(> DATA DATE NOT NULL,
+vendas_db(> NOTA INTEGER NOT NULL,
+vendas_db(> CONSTRAINT AVALIACAO_PK PRIMARY KEY (CPF, CODIGO, DATA)
+vendas_db(> );
+CREATE TABLE
+
+(QUESTAO - 2)
+vendas_db=> ALTER TABLE AVALIACAO ADD CONSTRAINT AVALIACAO_CLIENTE_FK FOREIGN KEY (CPF) REFERENCES CLIENTE (CPF);
+ALTER TABLE
+vendas_db=> ALTER TABLE AVALIACAO ADD CONSTRAINT AVALIACAO_PRODUTO_FK FOREIGN KEY (CODIGO) REFERENCES PRODUTO (CODIGO);
+ALTER TABLE
+
+(QUESTAO - 3)
+vendas_db=> UPDATE ITEMPEDIDO SET QUANTIDADE = 5 WHERE PRODUTO = 111 AND PEDIDO = 3;
+UPDATE 1
+
+(QUESTAO - 4)
+vendas_db=> INSERT INTO AVALIACAO (CPF, CODIGO, DATA, NOTA) VALUES (222, 111, '15/06/23', 5);
+INSERT 0 1
+vendas_db=> INSERT INTO AVALIACAO (CPF, CODIGO, DATA, NOTA) VALUES (333, 222, '15/06/23', 4);
+INSERT 0 1
+vendas_db=> INSERT INTO AVALIACAO (CPF, CODIGO, DATA, NOTA) VALUES (222, 111, '15/06/23', 4);
+ERROR:  duplicate key value violates unique constraint "avaliacao_pk"
+DETAIL:  Key (cpf, codigo, data)=(222, 111, 2023-06-15) already exists.
+
+(QUESTAO - 5)  
+PORQUE SE REPETEM AS 3 CHAVES PRIMARIAS DA TABELA AVALIACAO (CPF, CODIGO E DATA) DA 1º E 3º LINHA.
+
+(QUESTAO - 6)                                                      ^
+vendas_db=> SELECT codigo from Pedido WHERE status = 'A' OR status = 'E' OR status = 'N' AND cpf = 222;
+ codigo
+--------
+      1
+      2
+      5
+(3 rows)                                         ^
+vendas_db=> SELECT PRODUTO, QUANTIDADE from ITEMPEDIDO WHERE PEDIDO = 3;
+ produto | quantidade
+---------+------------
+     444 |          5
+     555 |          3
+     111 |          5
+(3 rows)
+vendas_db=> SELECT CODIGO from PRODUTO WHERE ATIVO = FALSE OR ATIVO IS NULL;
+ codigo
+--------
+    444
+    555
+    666
+(3 rows)
+
+(QUESTAO - 7)
+vendas_db=>  DELETE FROM PRODUTO WHERE CODIGO = 222;
+ERROR:  update or delete on table "produto" violates foreign key constraint "produto_itempedido_fk" on table "itempedido"
+DETAIL:  Key (codigo)=(222) is still referenced from table "itempedido".
+vendas_db=>  PORQUE CODIGO É CHAVE ESTRANGEIRA NA TABELA AVALIACAO E ITEMPEDIDO.
